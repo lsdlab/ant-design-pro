@@ -1,5 +1,4 @@
-import React from 'react';
-import { notification, Button, message } from 'antd';
+import { Modal, message } from 'antd';
 import { formatMessage } from 'umi/locale';
 
 // Notify user if offline now
@@ -9,18 +8,11 @@ window.addEventListener('sw.offline', () => {
 
 // Pop up a prompt on the page asking the user if they want to use the latest version
 window.addEventListener('sw.updated', e => {
-  const key = `open${Date.now()}`;
-  const btn = (
-    <Button type="primary" onClick={() => notification.close(key)}>
-      {formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
-    </Button>
-  );
-  notification.open({
-    message: formatMessage({ id: 'app.pwa.serviceworker.updated' }),
-    description: formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
-    btn,
-    key,
-    onClose: async () => {
+  Modal.confirm({
+    title: formatMessage({ id: 'app.pwa.serviceworker.updated' }),
+    content: formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
+    okText: formatMessage({ id: 'app.pwa.serviceworker.updated.ok' }),
+    onOk: async () => {
       // Check if there is sw whose state is waiting in ServiceWorkerRegistration
       // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration
       const worker = e.detail && e.detail.waiting;

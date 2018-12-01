@@ -161,7 +161,7 @@ export function formatWan(val) {
       <span>
         {result}
         <span
-          style={{
+          styles={{
             position: 'relative',
             top: -2,
             fontSize: 14,

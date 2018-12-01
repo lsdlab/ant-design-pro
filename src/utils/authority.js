@@ -13,7 +13,9 @@ export function getAuthority(str) {
   if (typeof authority === 'string') {
     return [authority];
   }
-  return authority || ['admin'];
+  // return authority || ['admin'];
+  // JC localstorage 没有 antd-pro-authority 这个键就认为没有登录
+  return authority;
 }
 
 export function setAuthority(authority) {
