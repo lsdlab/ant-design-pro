@@ -1,4 +1,4 @@
-import { fetchCurrent } from '@/services/user';
+import { fetchCurrent } from '@/services/api';
 
 export default {
   namespace: 'user',

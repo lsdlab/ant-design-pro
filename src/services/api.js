@@ -124,3 +124,81 @@ export async function queryNotices() {
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
+
+
+const apiHost = 'http://localhost:8000';    // development
+// const apiHost = 'http://localhost:8000';    // production
+const apiVersion = '/api/v1';
+
+function getToken() {
+  if (localStorage.getItem("token") !== null) {
+    return localStorage.getItem("token")
+  }
+  return ''
+}
+
+export async function jwtToken(params) {
+  return request(`${apiHost}${apiVersion}/jwt/token-auth/`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export async function fetchCurrent() {
+  const token = getToken();
+  return request(`${apiHost}${apiVersion}/users/fetch_current/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${token}`,
+    },
+  });
+}
+
+export async function queryArticles(params) {
+  const token = getToken();
+  return request(`${apiHost}${apiVersion}/articles/?${stringify(params)}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${token}`,
+    },
+  });
+}
+
+export async function createArticle(params) {
+  const token = getToken();
+  return request(`${apiHost}${apiVersion}/articles/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${token}`,
+    },
+  });
+}
+
+export async function updateArticle(params, aritcleID) {
+  const token = getToken();
+  return request(`${apiHost}${apiVersion}/articles/${aritcleID}`, {
+    method: 'PUT',
+    body: params,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${token}`,
+    },
+  });
+}
+
+export async function deleteArticle(params, aritcleID) {
+  const token = getToken();
+  return request(`${apiHost}${apiVersion}/articles/${aritcleID}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${token}`,
+    },
+  });
+}
