@@ -14,13 +14,13 @@ const FooterView = () => (
           blankTarget: true,
         },
         {
-          key: 'ant-design-pro',
+          key: 'lsdlab-ant-design-pro',
           title: 'lsdlab/ant-design-pro',
           href: 'https://github.com/lsdlab/ant-design-pro',
           blankTarget: true,
         },
         {
-          key: 'ant-design-pro',
+          key: 'ant-design-ant-design-pro',
           title: 'ant-design/ant-design-pro',
           href: 'https://github.com/ant-design/ant-design-pro',
           blankTarget: true,

@@ -3,12 +3,12 @@ import { Icon } from 'antd';
 import styles from './index.less';
 
 export default {
-  UserName: {
+  Username: {
     props: {
       size: 'large',
-      id: 'userName',
+      id: 'username',
       prefix: <Icon type="user" className={styles.prefixIcon} />,
-      placeholder: 'admin',
+      placeholder: '',
     },
     rules: [
       {
@@ -23,7 +23,7 @@ export default {
       prefix: <Icon type="lock" className={styles.prefixIcon} />,
       type: 'password',
       id: 'password',
-      placeholder: '888888',
+      placeholder: '',
     },
     rules: [
       {
@@ -36,7 +36,7 @@ export default {
     props: {
       size: 'large',
       prefix: <Icon type="mobile" className={styles.prefixIcon} />,
-      placeholder: 'mobile number',
+      placeholder: '',
     },
     rules: [
       {
@@ -53,7 +53,7 @@ export default {
     props: {
       size: 'large',
       prefix: <Icon type="mail" className={styles.prefixIcon} />,
-      placeholder: 'captcha',
+      placeholder: '',
     },
     rules: [
       {

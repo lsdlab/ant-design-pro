@@ -41,6 +41,19 @@ export default [
           },
         ],
       },
+      // example
+      {
+        path: '/example',
+        name: 'example',
+        icon: 'dashboard',
+        routes: [
+          {
+            path: '/example/article-list',
+            name: 'article-list',
+            component: './Example/ArticleList',
+          },
+        ],
+      },
       // forms
       {
         path: '/form',

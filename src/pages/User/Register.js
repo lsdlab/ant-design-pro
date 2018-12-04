@@ -251,15 +251,6 @@ class Register extends Component {
           </FormItem>
           <FormItem>
             <InputGroup compact>
-              <Select
-                size="large"
-                value={prefix}
-                onChange={this.changePrefix}
-                style={{ width: '20%' }}
-              >
-                <Option value="86">+86</Option>
-                <Option value="87">+87</Option>
-              </Select>
               {getFieldDecorator('mobile', {
                 rules: [
                   {
@@ -274,7 +265,6 @@ class Register extends Component {
               })(
                 <Input
                   size="large"
-                  style={{ width: '80%' }}
                   placeholder={formatMessage({ id: 'form.phone-number.placeholder' })}
                 />
               )}

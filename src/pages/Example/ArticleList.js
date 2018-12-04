@@ -84,36 +84,36 @@ class ArticleList extends PureComponent {
     {
       title: '标题',
       dataIndex: 'title',
-      key: 'title',
+      rowKey: 'title',
     },
     {
       title: 'slug',
       dataIndex: 'slug',
-      key: 'slug',
+      rowKey: 'slug',
     },
     {
       title: '作者',
       dataIndex: 'author',
-      key: 'author',
+      rowKey: 'author',
     },
     {
       title: '状态',
       dataIndex: 'status_name',
-      key: 'status_name',
+      rowKey: 'status_name',
     },
     {
       title: '创建时间',
       dataIndex: 'created_at',
-      key: 'created_at',
+      rowKey: 'created_at',
     },
     {
       title: '更新时间',
       dataIndex: 'updated_at',
-      key: 'updated_at',
+      rowKey: 'updated_at',
     },
     {
       title: '操作',
-      key: 'operation',
+      rowKey: 'operation',
       render: (text, record) => (
         <Fragment>
           <a href="">详情</a>
