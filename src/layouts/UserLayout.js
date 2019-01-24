@@ -27,7 +27,7 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2018 Breakwire Lab
+    <p>Copyright &copy; <a href="https://breakwire.me" target="_blank">Breakwire</a> 2018-2019 All Rights Reserved</p>
   </Fragment>
 );
 

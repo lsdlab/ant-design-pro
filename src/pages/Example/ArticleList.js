@@ -272,7 +272,6 @@ class ArticleList extends PureComponent {
   };
 
   handleRemove = (articleID) => {
-    console.log(articleID);
     const { dispatch } = this.props;
     dispatch({
       type: 'articles/delete',
