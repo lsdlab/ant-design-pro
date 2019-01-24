@@ -1,4 +1,4 @@
-import { queryArticles, createArticle, updateArticle, deleteArticle } from '@/services/api'
+import { queryArticles, createArticle, patchArticle, deleteArticle } from '@/services/api'
 
 export default {
   namespace: 'articles',
@@ -18,11 +18,11 @@ export default {
         payload: response,
       });
     },
-    *create({ payload, articleID }, { call, put }) {
-      yield call(createArticle, payload, articleID);
+    *create({ payload }, { call, put }) {
+      yield call(createArticle, payload);
     },
-    *update({ payload, articleID }, { call, put }) {
-      yield call(updateArticle, payload, articleID);
+    *patch({ payload, articleID }, { call, put }) {
+      yield call(patchArticle, payload, articleID);
     },
     *delete({ payload, articleID }, { call, put }) {
       yield call(deleteArticle, articleID);

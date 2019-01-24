@@ -16,10 +16,8 @@ import {
   DatePicker,
   Modal,
   message,
-  Badge,
   Divider,
-  Steps,
-  Radio,
+  Popconfirm,
 } from 'antd';
 import SimpleTable from '@/components/SimpleTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -27,10 +25,8 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../List/TableList.less';
 
 const FormItem = Form.Item;
-const { Step } = Steps;
 const { TextArea } = Input;
 const { Option } = Select;
-const RadioGroup = Radio.Group;
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -45,7 +41,9 @@ const CreateForm = Form.create()(props => {
     <Modal
       destroyOnClose
       centered
+      keyboard
       title="新建"
+      width={800}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
@@ -64,6 +62,55 @@ const CreateForm = Form.create()(props => {
   );
 });
 
+@Form.create()
+class UpdateForm extends PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalFormVals: {
+        title: props.values.title,
+        content: props.values.content
+      },
+    };
+
+    this.formLayout = {
+      labelCol: { span: 7 },
+      wrapperCol: { span: 13 },
+    };
+  }
+
+  render() {
+    const { updateModalVisible, form, handleUpdateModalVisible } = this.props;
+    const { modalFormVals } = this.state;
+
+    return (
+      <Modal
+        destroyOnClose
+        centered
+        keyboard
+        title="编辑"
+        width={800}
+        visible={updateModalVisible}
+        onCancel={() => handleUpdateModalVisible()}
+      >
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="标题">
+          {form.getFieldDecorator('title', {
+            initialValue: modalFormVals.title,
+            rules: [{ required: true, message: '请输入标题！' }],
+          })(<Input placeholder="请输入标题" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="内容">
+          {form.getFieldDecorator('content', {
+            initialValue: modalFormVals.content,
+            rules: [{ required: true, message: '请输入内容！'}],
+          })(<TextArea rows={8} placeholder="请输入内容" />)}
+        </FormItem>
+      </Modal>
+    );
+  }
+}
+
 /* eslint react/no-multi-comp:0 */
 @connect(({ articles, loading }) => ({
   articles,
@@ -77,50 +124,36 @@ class ArticleList extends PureComponent {
     modalVisible: false,
     updateModalVisible: false,
     formValues: {},
+    currentRecord: {},
+    modalFormValues: {},
   };
 
   columns = [
-
     {
       title: '标题',
       dataIndex: 'title',
-      rowKey: 'title',
-    },
-    {
-      title: 'slug',
-      dataIndex: 'slug',
-      rowKey: 'slug',
     },
     {
       title: '作者',
       dataIndex: 'author',
-      rowKey: 'author',
     },
     {
       title: '状态',
       dataIndex: 'status_name',
-      rowKey: 'status_name',
     },
     {
       title: '创建时间',
       dataIndex: 'created_at',
-      rowKey: 'created_at',
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updated_at',
-      rowKey: 'updated_at',
     },
     {
       title: '操作',
-      rowKey: 'operation',
       render: (text, record) => (
         <Fragment>
-          <a href="">详情</a>
+          <a onClick={() => this.handleUpdateModalVisible(true, record)}>编辑</a>
           <Divider type="vertical" />
-          <a href="">编辑</a>
-          <Divider type="vertical" />
-          <a href="">删除</a>
+          <Popconfirm title="是否要删除此文章？" onConfirm={() => this.handleRemove(record.id)}>
+              <a>删除</a>
+            </Popconfirm>
         </Fragment>
       ),
     },
@@ -171,57 +204,22 @@ class ArticleList extends PureComponent {
     });
   };
 
-  handleMenuClick = e => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'articles/remove',
-          payload: {
-            key: selectedRows.map(row => row.key),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
-  handleSelectRows = rows => {
-    this.setState({
-      selectedRows: rows,
-    });
-  };
-
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
+    const fieldsValue = form.getFieldsValue();
+    const values = {
+      search: fieldsValue.search,
+      status: fieldsValue.status,
+    };
 
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
+    this.setState({
+      formValues: values,
+    });
 
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'articles/fetch',
-        payload: values,
-      });
+    dispatch({
+      type: 'articles/fetch',
+      payload: values,
     });
   };
 
@@ -231,39 +229,61 @@ class ArticleList extends PureComponent {
     });
   };
 
+
+
   handleUpdateModalVisible = (flag, record) => {
     this.setState({
       updateModalVisible: !!flag,
-      stepFormValues: record || {},
+      currentRecord: record || {},
     });
   };
 
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'articles/add',
+      type: 'articles/create',
       payload: {
-        desc: fields.desc,
-      },
+        title: fields.title,
+        content: fields.content,
+        status: '1',
+      }
+    }).then((data) => {
+      message.success('添加文章成功');
+      this.handleModalVisible();
+      this.props.dispatch({
+        type: 'articles/fetch',
+        payload: {},
+      });
     });
-
-    message.success('添加成功');
-    this.handleModalVisible();
   };
 
   handleUpdate = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'articles/update',
+      type: 'articles/patch',
       payload: {
-        name: fields.name,
-        desc: fields.desc,
-        key: fields.key,
+        title: fields.title,
+        content: fields.content
       },
     });
 
     message.success('配置成功');
     this.handleUpdateModalVisible();
+  };
+
+  handleRemove = (articleID) => {
+    console.log(articleID);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'articles/delete',
+      articleID: articleID,
+    }).then(() => {
+      message.success('删除文章成功！');
+      dispatch({
+        type: 'articles/fetch',
+        payload: {},
+      });
+    });
   };
 
   renderSimpleForm() {
@@ -289,7 +309,7 @@ class ArticleList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
+          <Col md={4} sm={12}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -298,6 +318,11 @@ class ArticleList extends PureComponent {
                 重置
               </Button>
             </span>
+          </Col>
+          <Col md={4} sm={12}>
+            <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+              新建
+            </Button>
           </Col>
         </Row>
       </Form>
@@ -309,7 +334,7 @@ class ArticleList extends PureComponent {
       articles: { data },
       loading,
     } = this.props;
-    const { modalVisible, updateModalVisible, currentPage } = this.state;
+    const { currentPage, modalVisible, updateModalVisible, currentRecord } = this.state;
 
     const parentMethods = {
       handleAdd: this.handleAdd,
@@ -324,11 +349,6 @@ class ArticleList extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建
-              </Button>
-            </div>
             <SimpleTable
               loading={loading}
               data={data}
@@ -338,6 +358,13 @@ class ArticleList extends PureComponent {
           </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        {currentRecord && Object.keys(currentRecord).length ? (
+          <UpdateForm
+            {...updateMethods}
+            updateModalVisible={updateModalVisible}
+            values={currentRecord}
+          />
+        ) : null}
       </PageHeaderWrapper>
     );
   }

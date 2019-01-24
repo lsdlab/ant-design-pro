@@ -172,18 +172,7 @@ export async function queryArticles(params) {
 export async function createArticle(params) {
   const token = getToken();
   return request(`${apiHost}${apiVersion}/articles/`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `JWT ${token}`,
-    },
-  });
-}
-
-export async function updateArticle(params, aritcleID) {
-  const token = getToken();
-  return request(`${apiHost}${apiVersion}/articles/${aritcleID}`, {
-    method: 'PUT',
+    method: 'POST',
     body: params,
     headers: {
       'Content-Type': 'application/json',
@@ -192,7 +181,19 @@ export async function updateArticle(params, aritcleID) {
   });
 }
 
-export async function deleteArticle(params, aritcleID) {
+export async function patchArticle(params, aritcleID) {
+  const token = getToken();
+  return request(`${apiHost}${apiVersion}/articles/${aritcleID}`, {
+    method: 'patch',
+    body: params,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${token}`,
+    },
+  });
+}
+
+export async function deleteArticle(aritcleID) {
   const token = getToken();
   return request(`${apiHost}${apiVersion}/articles/${aritcleID}`, {
     method: 'DELETE',

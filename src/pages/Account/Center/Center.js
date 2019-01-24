@@ -133,10 +133,14 @@ class Center extends PureComponent {
                     <div>{currentUser.url}</div>
                   </div>
                   <div className={styles.detail}>
-                    <p>
-                      <i className={styles.address} />
-                      {currentUser.location}
-                    </p>
+                    {currentUser.location ? (
+                      <p>
+                        <i className={styles.address} />
+                        {currentUser.location}
+                      </p>
+                    ) : (
+                      ''
+                    )}
                   </div>
                   <Divider style={{ marginTop: 16 }} dashed />
                   <div className={styles.team}>
