@@ -126,7 +126,7 @@ export async function getFakeCaptcha(mobile) {
 }
 
 
-const apiHost = 'http://localhost:9000';    // development
+const apiHost = 'http://localhost:8000';    // development
 // const apiHost = 'http://localhost:8000';    // production
 const apiVersion = '/api/v1';
 

@@ -1,10 +1,10 @@
 let apiHost;
 if (process.env.APP_TYPE === 'site' || process.env.NODE_ENV !== 'production') {
   console.log('========== DEVELOPMENT RUNSERVER ==========');
-  apiHost = 'http://localhost:9000';
+  apiHost = 'http://localhost:8000';
 } else {
   console.log('======== PRODUCTION BUILD ========');
-  apiHost = 'https://localhost:9000';
+  apiHost = 'https://localhost:8000';
 }
 
 module.exports = {
